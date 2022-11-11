@@ -1,0 +1,32 @@
+%{
+        #include <stdio.h>
+	#include <stdlib.h>
+	#include "y.tab.h"
+#ifndef yywrap
+static int yywrap(void) { return 1;}
+#endif
+%}
+DIGITO [0-9]
+LETRAS [a-zA-Z]
+IDENTIFICADOR {LETRAS}({LETRAS}|{DIGITO})*
+%%
+"inicio" {return (INICIO);};
+"fin" {return (FIN);};
+"leer" {return (LEER);};
+"escribir" {return (ESCRIBIR);};
+{IDENTIFICADOR} {return (ID);};
+{DIGITO}+ {yylval.num=atoi(yytext);return (CONSTANTE);};
+":=" {return (ASIGNACION);};
+"(" {return (PARENIZQUIERDO);};
+")" {return (PARENDERECHO);};
+"," {return (COMA);};
+";" {return (PUNTOYCOMA);};
+"+" {return (MAS);};
+"-" {return (MENOS);};
+. {errorLexico();};
+//. {printf("Esto es un error léxico");};
+%%
+
+void errorLexico(void){
+   printf("Error léxico: caracter \"%s\" inválido, en línea %d.", yytext, yylineno);
+}
